@@ -1,0 +1,61 @@
+---
+title: "Cartogram of Corporal Punishment Bans"
+author: "Andy Grogan-Kaylor"
+date: "today"
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme:
+      light: yeti
+      dark: vapor
+    lightbox: true
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+# Setup
+
+```{r}
+#| output: false
+
+library(rnaturalearth) # natural earth data
+
+library(ggplot2) # beautiful maps
+
+library(dplyr) # data wrangling
+
+library(sf) # simple (spatial) features
+
+library(cartogram) # cartograms!
+
+```
+
+# Get Map Data
+
+```{r}
+
+mapdata <- ne_countries(scale = "medium", # medium scale
+                        returnclass = "sf")  # as sf object
+
+```
+
+# Basic Map
+
+```{r}
+
+mymap <- ggplot(mapdata) + # the data I am mapping
+  geom_sf() # the geometry I am using
+
+mymap # replay my map
+
+```
+
+# Project The Map Data
+
+```{r}
+
+```
+
+
+
