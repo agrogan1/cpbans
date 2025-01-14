@@ -27,6 +27,8 @@ library(dplyr) # data wrangling
 
 library(sf) # simple (spatial) features
 
+library(WDI) # for accessing World Bank data
+
 library(cartogram) # cartograms!
 
 ```
@@ -54,6 +56,55 @@ mymap # replay my map
 # Project The Map Data
 
 ```{r}
+
+mapdata_robinson <- st_transform(mapdata,
+                             "ESRI:54030") # Robinson
+
+```
+
+# Map The Projected Data
+
+```{r}
+
+ggplot(mapdata_robinson) + # the data I am mapping
+  geom_sf() # the geometry I am using
+
+```
+
+# Get World Bank Data on Population of Children
+
+```{r}
+#| eval: false
+
+# get names of specific indicators from WDI Data Catalog
+
+WorldBankData <- WDI(country="all", 
+                     indicator=c("SI.POV.GINI", # Gini
+                                 "NY.GDP.PCAP.CD", # GDP
+                                 "SP.DYN.LE00.IN", # life expectancy
+                                 "SP.POP.TOTL", # population
+                                 "SP.POP.0014.TO", # child population 
+                                 "SN.ITK.DEFC.ZS"), # undernourishment
+                     start = 1980, 
+                     end = 2023, 
+                     extra = TRUE) 
+
+
+save(WorldBankData, file="WorldBankData.RData")
+
+```
+
+```{r}
+
+load(WorldBankData)
+
+```
+
+```{r}
+
+mydata <- WorldBankData %>% 
+  filter(year == 2020) %>%
+  select(country, iso3c, year, SP.POP.0014.TO)
 
 ```
 
