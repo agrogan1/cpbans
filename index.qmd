@@ -96,7 +96,7 @@ save(WorldBankData, file="WorldBankData.RData")
 
 ```{r}
 
-load(WorldBankData)
+load("WorldBankData.RData")
 
 ```
 
