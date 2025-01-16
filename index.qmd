@@ -53,7 +53,7 @@ mymap # replay my map
 
 ```
 
-# Project The Map Data
+# Project The Map Data With Robinson Projection
 
 ```{r}
 
@@ -62,7 +62,7 @@ mapdata_robinson <- st_transform(mapdata,
 
 ```
 
-# Map The Projected Data
+# Map The Robinson Projected Data
 
 ```{r}
 
@@ -100,13 +100,110 @@ load("WorldBankData.RData")
 
 ```
 
+# Subset of World Bank Data
+
 ```{r}
 
-mydata <- WorldBankData %>% 
+WorldBankData_subset <- WorldBankData %>% 
   filter(year == 2020) %>%
-  select(country, iso3c, year, SP.POP.0014.TO)
+  select(country, iso3c, year, SP.POP.0014.TO) %>%
+  mutate(iso_a3 = iso3c) # copy 'iso3c' over to 'iso_a3'
 
 ```
 
+# Join Robinson Projected Map Data With World Bank Data
 
+```{r}
+
+mapdata_robinson_WorldBankData <- left_join(mapdata_robinson, 
+                     WorldBankData_subset, 
+                     by = "iso_a3")
+
+```
+
+# Get Data on Corporal Punishment Bans
+
+```{r}
+
+load(url("https://github.com/agrogan1/research/raw/refs/heads/master/cpbans/CPBans.RData"))
+
+cpbans <- cpbans %>%
+  mutate(iso_a3 = country_code) %>% 
+  mutate(cpban = 1)
+
+```
+
+# Join Map Data + World Bank Data With Corporal Punishment Bans
+
+```{r}
+
+mapdata_robinson_WorldBankData_cpbans <-
+  left_join(mapdata_robinson_WorldBankData, 
+                     cpbans, 
+                     by = "iso_a3")
+
+mapdata_robinson_WorldBankData_cpbans$cpban[is.na(mapdata_robinson_WorldBankData_cpbans$cpban)] <- 0 # convert NA's to "No"
+
+mapdata_robinson_WorldBankData_cpbans$cpban <- 
+  factor(mapdata_robinson_WorldBankData_cpbans$cpban)
+
+```
+
+# Map
+
+```{r}
+
+ggplot(mapdata_robinson_WorldBankData_cpbans) + # the data I am mapping
+  geom_sf(aes(fill = cpban)) + # the geometry I am using
+  scale_fill_manual(name = "Corporal Punishment Ban",
+                    values = c("lightgrey", "#1CABE2"),
+                    labels = c("no", "yes")) +
+  theme_minimal()
+
+
+```
+
+# Make The Cartogram Data
+
+```{r}
+
+start_time <- Sys.time() # time this step
+
+cartogram_data <- cartogram_cont(mapdata_robinson_WorldBankData_cpbans, 
+                                    "SP.POP.0014.TO", 
+                                    itermax = 9) # 9 iterations; 2.3 minutes
+
+end_time <- Sys.time()
+
+end_time - start_time
+
+```
+
+# Plot the Cartogram
+
+```{r}
+
+ggplot(cartogram_data) + 
+  geom_sf(aes(fill = cpban),
+          color = "black",
+          linewidth = .25) +
+  scale_fill_manual(name = "Corporal Punishment Ban",
+                    values = c("lightgrey", "#1CABE2"),
+                    labels = c("no", "yes")) +
+  labs(title = "The Majority of the Worlds Children",
+       subtitle = "Are Still Not Protected By Corporal Punishment Bans",
+       caption = "Countries Re-Sized By Child Population") +
+  theme_void()
+
+ggsave("cartogram.png", 
+       dpi = "retina",
+       bg = "white")
+
+ggsave("cartogram.pdf", 
+       dpi = "retina",
+       bg = "white",
+       height = 8.5,
+       width = 11)
+
+```
 
