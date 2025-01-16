@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Andy Grogan-Kaylor">
-<meta name="dcterms.date" content="2025-01-14">
+<meta name="dcterms.date" content="2025-01-16">
 
 <title>Cartogram of Corporal Punishment Bans</title>
 <style>
@@ -89,9 +89,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#setup" id="toc-setup" class="nav-link active" data-scroll-target="#setup"><span class="header-section-number">1</span> Setup</a></li>
   <li><a href="#get-map-data" id="toc-get-map-data" class="nav-link" data-scroll-target="#get-map-data"><span class="header-section-number">2</span> Get Map Data</a></li>
   <li><a href="#basic-map" id="toc-basic-map" class="nav-link" data-scroll-target="#basic-map"><span class="header-section-number">3</span> Basic Map</a></li>
-  <li><a href="#project-the-map-data" id="toc-project-the-map-data" class="nav-link" data-scroll-target="#project-the-map-data"><span class="header-section-number">4</span> Project The Map Data</a></li>
-  <li><a href="#map-the-projected-data" id="toc-map-the-projected-data" class="nav-link" data-scroll-target="#map-the-projected-data"><span class="header-section-number">5</span> Map The Projected Data</a></li>
+  <li><a href="#project-the-map-data-with-robinson-projection" id="toc-project-the-map-data-with-robinson-projection" class="nav-link" data-scroll-target="#project-the-map-data-with-robinson-projection"><span class="header-section-number">4</span> Project The Map Data With Robinson Projection</a></li>
+  <li><a href="#map-the-robinson-projected-data" id="toc-map-the-robinson-projected-data" class="nav-link" data-scroll-target="#map-the-robinson-projected-data"><span class="header-section-number">5</span> Map The Robinson Projected Data</a></li>
   <li><a href="#get-world-bank-data-on-population-of-children" id="toc-get-world-bank-data-on-population-of-children" class="nav-link" data-scroll-target="#get-world-bank-data-on-population-of-children"><span class="header-section-number">6</span> Get World Bank Data on Population of Children</a></li>
+  <li><a href="#subset-of-world-bank-data" id="toc-subset-of-world-bank-data" class="nav-link" data-scroll-target="#subset-of-world-bank-data"><span class="header-section-number">7</span> Subset of World Bank Data</a></li>
+  <li><a href="#join-robinson-projected-map-data-with-world-bank-data" id="toc-join-robinson-projected-map-data-with-world-bank-data" class="nav-link" data-scroll-target="#join-robinson-projected-map-data-with-world-bank-data"><span class="header-section-number">8</span> Join Robinson Projected Map Data With World Bank Data</a></li>
+  <li><a href="#get-data-on-corporal-punishment-bans" id="toc-get-data-on-corporal-punishment-bans" class="nav-link" data-scroll-target="#get-data-on-corporal-punishment-bans"><span class="header-section-number">9</span> Get Data on Corporal Punishment Bans</a></li>
+  <li><a href="#join-map-data-world-bank-data-with-corporal-punishment-bans" id="toc-join-map-data-world-bank-data-with-corporal-punishment-bans" class="nav-link" data-scroll-target="#join-map-data-world-bank-data-with-corporal-punishment-bans"><span class="header-section-number">10</span> Join Map Data + World Bank Data With Corporal Punishment Bans</a></li>
+  <li><a href="#map" id="toc-map" class="nav-link" data-scroll-target="#map"><span class="header-section-number">11</span> Map</a></li>
+  <li><a href="#make-the-cartogram-data" id="toc-make-the-cartogram-data" class="nav-link" data-scroll-target="#make-the-cartogram-data"><span class="header-section-number">12</span> Make The Cartogram Data</a></li>
+  <li><a href="#plot-the-cartogram" id="toc-plot-the-cartogram" class="nav-link" data-scroll-target="#plot-the-cartogram"><span class="header-section-number">13</span> Plot the Cartogram</a></li>
   </ul>
 </nav>
 </div>
@@ -116,7 +123,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">January 14, 2025</p>
+      <p class="date">January 16, 2025</p>
     </div>
   </div>
   
@@ -176,8 +183,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="project-the-map-data" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Project The Map Data</h1>
+<section id="project-the-map-data-with-robinson-projection" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Project The Map Data With Robinson Projection</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -186,8 +193,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 </section>
-<section id="map-the-projected-data" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Map The Projected Data</h1>
+<section id="map-the-robinson-projected-data" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Map The Robinson Projected Data</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
@@ -231,12 +238,148 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">"WorldBankData.RData"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
+<section id="subset-of-world-bank-data" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> Subset of World Bank Data</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>mydata <span class="ot">&lt;-</span> WorldBankData <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>WorldBankData_subset <span class="ot">&lt;-</span> WorldBankData <span class="sc">%&gt;%</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">==</span> <span class="dv">2020</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, iso3c, year, SP.POP.<span class="fl">0014.</span>TO)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(country, iso3c, year, SP.POP.<span class="fl">0014.</span>TO) <span class="sc">%&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso_a3 =</span> iso3c) <span class="co"># copy 'iso3c' over to 'iso_a3'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="join-robinson-projected-map-data-with-world-bank-data" class="level1" data-number="8">
+<h1 data-number="8"><span class="header-section-number">8</span> Join Robinson Projected Map Data With World Bank Data</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>mapdata_robinson_WorldBankData <span class="ot">&lt;-</span> <span class="fu">left_join</span>(mapdata_robinson, </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                     WorldBankData_subset, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">by =</span> <span class="st">"iso_a3"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="get-data-on-corporal-punishment-bans" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Get Data on Corporal Punishment Bans</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">url</span>(<span class="st">"https://github.com/agrogan1/research/raw/refs/heads/master/cpbans/CPBans.RData"</span>))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>cpbans <span class="ot">&lt;-</span> cpbans <span class="sc">%&gt;%</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso_a3 =</span> country_code) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">cpban =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="join-map-data-world-bank-data-with-corporal-punishment-bans" class="level1" data-number="10">
+<h1 data-number="10"><span class="header-section-number">10</span> Join Map Data + World Bank Data With Corporal Punishment Bans</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mapdata_robinson_WorldBankData_cpbans <span class="ot">&lt;-</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(mapdata_robinson_WorldBankData, </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                     cpbans, </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">by =</span> <span class="st">"iso_a3"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>mapdata_robinson_WorldBankData_cpbans<span class="sc">$</span>cpban[<span class="fu">is.na</span>(mapdata_robinson_WorldBankData_cpbans<span class="sc">$</span>cpban)] <span class="ot">&lt;-</span> <span class="dv">0</span> <span class="co"># convert NA's to "No"</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>mapdata_robinson_WorldBankData_cpbans<span class="sc">$</span>cpban <span class="ot">&lt;-</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">factor</span>(mapdata_robinson_WorldBankData_cpbans<span class="sc">$</span>cpban)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+</section>
+<section id="map" class="level1" data-number="11">
+<h1 data-number="11"><span class="header-section-number">11</span> Map</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(mapdata_robinson_WorldBankData_cpbans) <span class="sc">+</span> <span class="co"># the data I am mapping</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cpban)) <span class="sc">+</span> <span class="co"># the geometry I am using</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">name =</span> <span class="st">"Corporal Punishment Ban"</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"#1CABE2"</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>)) <span class="sc">+</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-12-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-3"><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="make-the-cartogram-data" class="level1" data-number="12">
+<h1 data-number="12"><span class="header-section-number">12</span> Make The Cartogram Data</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>start_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>() <span class="co"># time this step</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>cartogram_data <span class="ot">&lt;-</span> <span class="fu">cartogram_cont</span>(mapdata_robinson_WorldBankData_cpbans, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">"SP.POP.0014.TO"</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                                    <span class="at">itermax =</span> <span class="dv">9</span>) <span class="co"># 9 iterations; 2.3 minutes</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in cartogram_cont.sf(mapdata_robinson_WorldBankData_cpbans,
+"SP.POP.0014.TO", : NA not allowed in weight vector. Features will be removed
+from Shape.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>end_time <span class="ot">&lt;-</span> <span class="fu">Sys.time</span>()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>end_time <span class="sc">-</span> start_time</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stdout">
+<pre><code>Time difference of 2.622486 mins</code></pre>
+</div>
+</div>
+</section>
+<section id="plot-the-cartogram" class="level1" data-number="13">
+<h1 data-number="13"><span class="header-section-number">13</span> Plot the Cartogram</h1>
+<div class="cell">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(cartogram_data) <span class="sc">+</span> </span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> cpban),</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"black"</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>          <span class="at">linewidth =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">name =</span> <span class="st">"Corporal Punishment Ban"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightgrey"</span>, <span class="st">"#1CABE2"</span>),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"no"</span>, <span class="st">"yes"</span>)) <span class="sc">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"The Majority of the Worlds Children"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">subtitle =</span> <span class="st">"Are Still Not Protected By Corporal Punishment Bans"</span>,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Countries Re-Sized By Child Population"</span>) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><a href="index_files/figure-html/unnamed-chunk-14-1.png" class="lightbox" data-gallery="quarto-lightbox-gallery-4"><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></a></p>
+</figure>
+</div>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"cartogram.png"</span>, </span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="st">"retina"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">bg =</span> <span class="st">"white"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Saving 7 x 5 in image</code></pre>
+</div>
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"cartogram.pdf"</span>, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>       <span class="at">dpi =</span> <span class="st">"retina"</span>,</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">bg =</span> <span class="st">"white"</span>,</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">height =</span> <span class="fl">8.5</span>,</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">width =</span> <span class="dv">11</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -808,7 +951,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","closeEffect":"zoom","loop":false,"selector":".lightbox","openEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","openEffect":"zoom","descPosition":"bottom","loop":false,"closeEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

@@ -95,6 +95,7 @@ save(WorldBankData, file="WorldBankData.RData")
 ```
 
 ```{r}
+#| echo: false
 
 load("WorldBankData.RData")
 
@@ -179,6 +180,12 @@ end_time - start_time
 
 ```
 
+# Remove Small Areas From Cartogram
+
+```{r}
+
+```
+
 # Plot the Cartogram
 
 ```{r}
@@ -193,7 +200,11 @@ ggplot(cartogram_data) +
   labs(title = "The Majority of the Worlds Children",
        subtitle = "Are Still Not Protected By Corporal Punishment Bans",
        caption = "Countries Re-Sized By Child Population") +
-  theme_void()
+  theme_void() +
+  theme(plot.margin = margin(t = 20, 
+                             r = 20,
+                             b = 20,
+                             l = 20)) 
 
 ggsave("cartogram.png", 
        dpi = "retina",
