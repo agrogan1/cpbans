@@ -27,13 +27,17 @@ library(dplyr) # data wrangling
 
 library(sf) # simple (spatial) features
 
+library(smoothr) # geoprocessing
+
 library(WDI) # for accessing World Bank data
 
 library(cartogram) # cartograms!
 
+library(rayshader) # ray-tracing!
+
 ```
 
-# Get Map Data
+# Get Map Data With `rnaturalearth`
 
 ```{r}
 
@@ -184,33 +188,45 @@ end_time - start_time
 
 ```{r}
 
+cartogram_dropped <- 
+  drop_crumbs(cartogram_data, threshold = 10077132353) # drop lowest 25%
+
 ```
 
 # Plot the Cartogram
 
 ```{r}
 
-ggplot(cartogram_data) + 
+mycaption <- paste("Countries Re-Sized By Child Population",
+                   "\n",
+                   "Data on Child Population from World Bank",
+                   "\n",
+                   "Data on Corporal Punishment from End Corporal Punishment")
+
+mycartogram <- ggplot(cartogram_dropped) + # cartogram w small areas dropped
   geom_sf(aes(fill = cpban),
           color = "black",
           linewidth = .25) +
   scale_fill_manual(name = "Corporal Punishment Ban",
-                    values = c("lightgrey", "#1CABE2"),
+                    values = c("lightgrey", 
+                               "#1CABE2"),
                     labels = c("no", "yes")) +
   labs(title = "The Majority of the Worlds Children",
        subtitle = "Are Still Not Protected By Corporal Punishment Bans",
-       caption = "Countries Re-Sized By Child Population") +
+       caption = mycaption) +
   theme_void() +
-  theme(plot.margin = margin(t = 20, 
-                             r = 20,
-                             b = 20,
-                             l = 20)) 
+  theme(plot.margin = margin(t = 20, r = 20, b = 20, l = 20),
+        legend.position = "bottom") 
 
-ggsave("cartogram.png", 
+mycartogram # replay
+
+ggsave("cartogram.png",
+       mycartogram, 
        dpi = "retina",
        bg = "white")
 
 ggsave("cartogram.pdf", 
+       mycartogram,
        dpi = "retina",
        bg = "white",
        height = 8.5,
