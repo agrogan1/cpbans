@@ -182,6 +182,8 @@ end_time <- Sys.time()
 
 end_time - start_time
 
+save(cartogram_data, file = "cartogram.RData")
+
 ```
 
 # Remove Small Areas From Cartogram
@@ -204,19 +206,22 @@ mycaption <- paste("Countries Re-Sized By Child Population",
                    "Data on Corporal Punishment from End Corporal Punishment")
 
 mycartogram <- ggplot(cartogram_dropped) + # cartogram w small areas dropped
-  geom_sf(aes(fill = cpban),
+  geom_sf(aes(fill = year.of.prohibition),
           color = "black",
           linewidth = .25) +
-  scale_fill_manual(name = "Corporal Punishment Ban",
-                    values = c("lightgrey", 
-                               "#1CABE2"),
-                    labels = c("no", "yes")) +
+  # scale_fill_manual(name = "Corporal Punishment Ban",
+  #                   values = c("lightgrey", 
+  #                              "#1CABE2"),
+  #                   labels = c("no", "yes")) +
+  scale_fill_viridis_c(option = "turbo", 
+                       na.value="gray95",
+                       name = "year of ban") +
   labs(title = "The Majority of the Worlds Children",
        subtitle = "Are Still Not Protected By Corporal Punishment Bans",
        caption = mycaption) +
   theme_void() +
   theme(plot.margin = margin(t = 20, r = 20, b = 20, l = 20),
-        legend.position = "bottom") 
+        legend.position = "right") 
 
 mycartogram # replay
 
