@@ -25,6 +25,8 @@ library(ggplot2) # beautiful maps
 
 library(dplyr) # data wrangling
 
+library(tidyr) # tidy data
+
 library(sf) # simple (spatial) features
 
 library(smoothr) # geoprocessing
@@ -32,8 +34,6 @@ library(smoothr) # geoprocessing
 library(WDI) # for accessing World Bank data
 
 library(cartogram) # cartograms!
-
-library(rayshader) # ray-tracing!
 
 ```
 
@@ -147,7 +147,9 @@ mapdata_robinson_WorldBankData_cpbans <-
                      cpbans, 
                      by = "iso_a3")
 
-mapdata_robinson_WorldBankData_cpbans$cpban[is.na(mapdata_robinson_WorldBankData_cpbans$cpban)] <- 0 # convert NA's to "No"
+mapdata_robinson_WorldBankData_cpbans <- 
+  mapdata_robinson_WorldBankData_cpbans %>% 
+  dplyr::mutate(cpban = replace_na(cpban, 0))
 
 mapdata_robinson_WorldBankData_cpbans$cpban <- 
   factor(mapdata_robinson_WorldBankData_cpbans$cpban)
@@ -159,12 +161,14 @@ mapdata_robinson_WorldBankData_cpbans$cpban <-
 ```{r}
 
 ggplot(mapdata_robinson_WorldBankData_cpbans) + # the data I am mapping
-  geom_sf(aes(fill = cpban)) + # the geometry I am using
-  scale_fill_manual(name = "Corporal Punishment Ban",
-                    values = c("lightgrey", "#1CABE2"),
-                    labels = c("no", "yes")) +
+  geom_sf(aes(fill = year.of.prohibition)) + # the geometry I am using
+  # scale_fill_manual(name = "Corporal Punishment Ban",
+  #                   values = c("lightgrey", "#1CABE2"),
+  #                   labels = c("no", "yes")) +
+  scale_fill_viridis_c(option = "turbo", 
+                       na.value="gray95",
+                       name = "year of ban") +
   theme_minimal()
-
 
 ```
 
