@@ -1,0 +1,114 @@
+---
+title: "Treemap"
+author: "Andy Grogan-Kaylor"
+date: "today"
+format:
+  html:
+    toc: true
+    number-sections: true
+    theme:
+      light: yeti
+      dark: vapor
+    lightbox: true
+    code-fold: true
+    code-summary: "Show the code"
+---
+
+# Setup
+
+```{r}
+
+library(ggplot2) # beautiful graphs
+
+library(dplyr) # data wrangling
+
+library(tidyr) # tidy data
+
+library(countrycode) # manipulate country codes
+
+library(treemapify) # treemaps with ggplot
+
+```
+
+# Load World Bank Data from `cartogram`
+
+```{r}
+
+load("WorldBankData.RData")
+
+```
+
+# Subset of World Bank Data
+
+```{r}
+
+WorldBankData_subset <- WorldBankData %>% 
+  filter(year == 2020) %>%
+  filter(region != "Aggregates") %>%
+  select(country, iso3c, year, SP.POP.0014.TO, region) %>%
+  mutate(iso_a3 = iso3c) # copy 'iso3c' over to 'iso_a3'
+
+```
+
+# Get Data on Corporal Punishment Bans
+
+```{r}
+
+load(url("https://github.com/agrogan1/research/raw/refs/heads/master/cpbans/CPBans.RData"))
+
+cpbans <- cpbans %>%
+  mutate(iso3c = country_code) %>% 
+  mutate(cpban = 1)
+
+```
+
+# Join World Bank Data With Corporal Punishment Bans
+
+```{r}
+
+WorldBankData_cpbans <-
+  left_join(WorldBankData_subset,
+                     cpbans, 
+                     by = "iso3c")
+
+WorldBankData_cpbans <- 
+  WorldBankData_cpbans %>% 
+  dplyr::mutate(cpban = replace_na(cpban, 0)) # replace NA w 0
+
+```
+
+# Treemap
+
+```{r}
+
+WorldBankData_cpbans$continent <- 
+  countrycode(WorldBankData_cpbans$country.x, # get continents
+              origin = "country.name",
+              destination = "continent")
+
+WorldBankData_cpbans$cpban <- factor(WorldBankData_cpbans$cpban,
+                                     levels = c(0, 1), 
+                                     labels = c("no", "yes"))
+
+ggplot(WorldBankData_cpbans, 
+       aes(area = SP.POP.0014.TO,
+           fill = cpban,
+           label = country.x
+           # subgroup = continent
+           )) +
+  geom_treemap() + # treemap geometry
+  # geom_treemap_subgroup_border() + # borders for subgroups
+  geom_treemap_text(min.size = .5) + 
+  scale_fill_manual(name = "Corporal Punishment Ban",
+                    values = c("lightgrey",
+                               "#1CABE2"),
+                    label = c("no",
+                              "yes")) + # UNICEF blue
+  labs(title = "Around the World",
+       subtitle = "Most Children Are Not Protected From Physical Punishment",
+       caption = "Tiles Sized by Child Population")
+
+```
+
+
+
