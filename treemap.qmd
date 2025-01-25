@@ -17,6 +17,7 @@ format:
 # Setup
 
 ```{r}
+#| output: false
 
 library(ggplot2) # beautiful graphs
 
@@ -71,9 +72,30 @@ WorldBankData_cpbans <-
                      cpbans, 
                      by = "iso3c")
 
+```
+
+# Data Wrangling
+
+```{r}
+
 WorldBankData_cpbans <- 
   WorldBankData_cpbans %>% 
   dplyr::mutate(cpban = replace_na(cpban, 0)) # replace NA w 0
+
+WorldBankData_cpbans$continent <- 
+  countrycode(WorldBankData_cpbans$country.x, # get continents
+              origin = "country.name",
+              destination = "continent") 
+
+WorldBankData_cpbans$continent[is.na(WorldBankData_cpbans$continent)] <- ""
+
+WorldBankData_cpbans$continent <-
+  factor(WorldBankData_cpbans$continent) # make factor
+
+WorldBankData_cpbans$cpban <- 
+  factor(WorldBankData_cpbans$cpban, # factor w labels
+         levels = c(0, 1), 
+         labels = c("no", "yes"))
 
 ```
 
@@ -81,24 +103,21 @@ WorldBankData_cpbans <-
 
 ```{r}
 
-WorldBankData_cpbans$continent <- 
-  countrycode(WorldBankData_cpbans$country.x, # get continents
-              origin = "country.name",
-              destination = "continent")
-
-WorldBankData_cpbans$cpban <- factor(WorldBankData_cpbans$cpban,
-                                     levels = c(0, 1), 
-                                     labels = c("no", "yes"))
+mycaption <- paste("Country Tiles Sized By Child Population",
+                   "\n",
+                   "Data on Child Population from World Bank",
+                   "\n",
+                   "Data on Corporal Punishment from End Corporal Punishment")
 
 ggplot(WorldBankData_cpbans, 
        aes(area = SP.POP.0014.TO,
            fill = cpban,
-           label = country.x
-           # subgroup = continent
-           )) +
+           label = country.x, 
+           subgroup = continent)) +
   geom_treemap() + # treemap geometry
-  # geom_treemap_subgroup_border() + # borders for subgroups
+  geom_treemap_subgroup_border() + # borders for subgroups
   geom_treemap_text(min.size = .5) + 
+  # geom_treemap_subgroup_text(min.size = .5) +
   scale_fill_manual(name = "Corporal Punishment Ban",
                     values = c("lightgrey",
                                "#1CABE2"),
@@ -106,7 +125,9 @@ ggplot(WorldBankData_cpbans,
                               "yes")) + # UNICEF blue
   labs(title = "Around the World",
        subtitle = "Most Children Are Not Protected From Physical Punishment",
-       caption = "Tiles Sized by Child Population")
+       caption = mycaption)
+
+ggsave("treemap.png")
 
 ```
 
