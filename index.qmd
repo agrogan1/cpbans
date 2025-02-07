@@ -64,6 +64,10 @@ mymap # replay my map
 mapdata_robinson <- st_transform(mapdata,
                              "ESRI:54030") # Robinson
 
+# mapdata_mercator <- st_transform(mapdata, "EPSG:3857") # Mercator
+
+# mapdata_mercator <- mapdata_mercator %>% filter(continent != "Antarctica") # remove Antartica from Mercator
+
 ```
 
 # Map The Robinson Projected Data
@@ -124,6 +128,10 @@ mapdata_robinson_WorldBankData <- left_join(mapdata_robinson,
                      WorldBankData_subset, 
                      by = "iso_a3")
 
+# mapdata_mercator_WorldBankData <- left_join(mapdata_mercator, 
+#                      WorldBankData_subset, 
+#                      by = "iso_a3")
+
 ```
 
 # Get Data on Corporal Punishment Bans
@@ -142,6 +150,8 @@ cpbans <- cpbans %>%
 
 ```{r}
 
+# Robinson
+
 mapdata_robinson_WorldBankData_cpbans <-
   left_join(mapdata_robinson_WorldBankData, 
                      cpbans, 
@@ -153,6 +163,17 @@ mapdata_robinson_WorldBankData_cpbans <-
 
 mapdata_robinson_WorldBankData_cpbans$cpban <- 
   factor(mapdata_robinson_WorldBankData_cpbans$cpban)
+
+# Mercator
+
+# mapdata_mercator_WorldBankData_cpbans <- 
+#   left_join(mapdata_mercator_WorldBankData,
+#             cpbans,
+#             by = "iso_a3") %>%
+#   dplyr::mutate(cpban = replace_na(cpban, 0))
+
+# mapdata_mercator_WorldBankData_cpbans$cpban <- 
+#   factor(mapdata_mercator_WorldBankData_cpbans$cpban)
 
 ```
 
@@ -176,9 +197,12 @@ ggplot(mapdata_robinson_WorldBankData_cpbans) + # the data I am mapping
 
 ```{r}
 
+# Robinson 
+
 start_time <- Sys.time() # time this step
 
-cartogram_data <- cartogram_cont(mapdata_robinson_WorldBankData_cpbans, 
+cartogram_data <-
+  cartogram_cont(mapdata_robinson_WorldBankData_cpbans, 
                                     "SP.POP.0014.TO", 
                                     itermax = 9) # 9 iterations; 2.3 minutes
 
@@ -189,6 +213,27 @@ end_time - start_time
 save(cartogram_data, file = "cartogram.RData")
 
 ```
+
+```{r}
+
+# Mercator
+
+# start_time <- Sys.time() # time this step
+
+# cartogram_data_Mercator <-
+#   cartogram_cont(mapdata_mercator_WorldBankData_cpbans, 
+#                                     "SP.POP.0014.TO", 
+#                                     itermax = 9) # 9 iterations; 2.09 minutes
+
+# end_time <- Sys.time()
+
+# end_time - start_time
+
+# save(cartogram_data_Mercator, file = "cartogram_Mercator.RData")
+
+
+```
+
 
 # Remove Small Areas From Cartogram
 
@@ -203,14 +248,14 @@ cartogram_dropped <-
 
 ```{r}
 
-mycaption <- paste("Countries Re-Sized By Child Population",
+mycaption <- paste("Robinson Projection Re-Sized By Child Population of Country",
                    "\n",
                    "Data on Child Population from World Bank",
                    "\n",
                    "Data on Corporal Punishment from End Corporal Punishment")
 
 mycartogram <- ggplot(cartogram_dropped) + # cartogram w small areas dropped
-  geom_sf(aes(fill = year.of.prohibition),
+  geom_sf(aes(fill = year.of.prohibition), # fill is "year of prohibition"
           color = "black",
           linewidth = .25) +
   # scale_fill_manual(name = "Corporal Punishment Ban",
